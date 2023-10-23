@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/usuarios?useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: postgres
-    password: admin
+    password: postgres
   jpa:
     hibernate:
       ddl-auto: update

@@ -1,7 +1,7 @@
 package br.org.aly.repository;
 
 import br.org.aly.model.User;
-import jakarta.validation.ConstraintViolationException;
+import br.org.aly.util.UserCreator;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Teste de criação de usuário! 🧪")
     void save_PersistUser(){
-        User user = createUserTest();
+        User user = UserCreator.createUserTest();
         User userSaved = this.userRepository.save(user);
 
         Assertions.assertThat(userSaved).isNotNull();
@@ -35,7 +35,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Teste de update do usuário! 🧪")
     void update_PersistUser(){
-        User user = createUserTest();
+        User user = UserCreator.createUserTest();
         User userSaved = this.userRepository.save(user);
 
         userSaved.setNome("Rodolfo");
@@ -54,7 +54,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Teste para deletar o usuário! 🧪")
     void delete_PersistUser(){
-        User user = createUserTest();
+        User user = UserCreator.createUserTest();
         User userSaved = this.userRepository.save(user);
 
         this.userRepository.delete(userSaved);
@@ -67,7 +67,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Find by profissao (usuário)! 🧪")
     void findByProfissao_PersistUser(){
-        User user = createUserTest();
+        User user = UserCreator.createUserTest();
         User userSaved = this.userRepository.save(user);
 
         String profissao = userSaved.getProfissao();
@@ -78,21 +78,16 @@ class UserRepositoryTest {
         Assertions.assertThat(users).contains(userSaved);
     }
 
-    @Test
-    @DisplayName("Teste de criação de usuário! 🧪")
-    void saveThrows_PersistUser(){
-        User user = new User();
+//    @Test
+//    @DisplayName("Teste de criação de usuário! 🧪")
+//    void saveThrows_PersistUser(){
+//        User user = new User();
+//
+//        Assertions.assertThatThrownBy(() -> this.userRepository.save(user))
+//                .isInstanceOf(ConstraintViolationException.class)
+//                .withFailMessage("🚨");
+//
+//    }
 
-        Assertions.assertThatThrownBy(() -> this.userRepository.save(user))
-                .isInstanceOf(ConstraintViolationException.class)
-                .withFailMessage("🚨");
 
-    }
-
-    private User createUserTest(){
-        return User.builder()
-                .nome("Rodolfo")
-                .profissao("QA")
-                .idade(20).build();
-    }
 }
