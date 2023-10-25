@@ -7,9 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Log4j2
 public class SpringClient {
-    public static void main(String[] args){
-        ResponseEntity<User> entity = new RestTemplate().getForEntity("http://localhost:8080/users/1", User.class);
-        log.info(entity);
+    public static void main(String[] args) {
 
         User objectUser = new RestTemplate().getForObject("http://localhost:8080/users/1", User.class);
         log.info(objectUser);
@@ -20,9 +18,10 @@ public class SpringClient {
         log.info("Usuário salvo{}", garfieldSaved);
 
         User userUpdate = garfieldSaved.getBody();
-        userUpdate.setIdade(22);
+        userUpdate.setNome("Aly");
+
         ResponseEntity<Void> devGarfiledUpdate = new RestTemplate()
-                .exchange("http://localhost:8080/users", HttpMethod.PUT, new HttpEntity<>(devGarfield, createJsonHeader()), Void.class);
+                .exchange("http://localhost:8080/users", HttpMethod.PUT, new HttpEntity<>(userUpdate, createJsonHeader()), Void.class);
         log.info(devGarfiledUpdate);
 
         ResponseEntity<Void> userDelete = new RestTemplate()
@@ -30,7 +29,7 @@ public class SpringClient {
         log.info(userDelete);
     }
 
-    private static HttpHeaders createJsonHeader(){
+    private static HttpHeaders createJsonHeader() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return httpHeaders;

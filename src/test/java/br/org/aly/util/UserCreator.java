@@ -5,7 +5,6 @@ import br.org.aly.model.User;
 public class UserCreator {
     public static User createUserTest() {
         return User.builder()
-                .id_user(1L)
                 .nome("Rodolfo")
                 .profissao("QA")
                 .idade(20).build();
