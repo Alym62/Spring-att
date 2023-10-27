@@ -2,6 +2,7 @@ package br.org.aly.controller;
 
 import br.org.aly.DTO.UserDTO;
 import br.org.aly.model.User;
+import br.org.aly.repository.UserRepository;
 import br.org.aly.services.UserService;
 import br.org.aly.util.UserCreator;
 import br.org.aly.util.UserDTOCreator;
@@ -28,6 +29,9 @@ class UserControllerTest {
     @Mock
     private UserService userServiceMook;
 
+    @Mock
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         PageImpl<User> userPage = new PageImpl<>(List.of(UserCreator.createUservalid()));
@@ -41,12 +45,16 @@ class UserControllerTest {
         BDDMockito.when(userServiceMook.findByProfissao(ArgumentMatchers.anyString()))
                 .thenReturn(List.of(UserCreator.createUservalid()));
 
+        BDDMockito.when(userRepository.findByIdadeAndProfissao(ArgumentMatchers.anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(List.of(UserCreator.createUservalid()));
+
         BDDMockito.when(userServiceMook.saveUser(ArgumentMatchers.any(UserDTO.class)))
                 .thenReturn(UserCreator.createUservalid());
 
         BDDMockito.doNothing().when(userServiceMook).attUser(ArgumentMatchers.any(UserDTO.class));
 
         BDDMockito.doNothing().when(userServiceMook).deleteUser(ArgumentMatchers.anyLong());
+
 
     }
 
@@ -92,6 +100,23 @@ class UserControllerTest {
 
         Assertions.assertThat(users.get(0).getProfissao()).isEqualTo(expectedProfissao);
 
+    }
+
+    @Test
+    @DisplayName("Teste de integração para buscar o usuário pela idade e profissão! 🧪")
+    void findByIdadeAndProfissaoTest(){
+        Integer expectedIdade = UserCreator.createUservalid().getIdade();
+        String expectedProfissao = UserCreator.createUservalid().getProfissao();
+
+        List<User> usersList = userController.controllerFindByIdadeAndProfissao(20, "QA").getBody();
+
+        Assertions.assertThat(usersList)
+                .isNotEmpty()
+                .isNotNull()
+                .hasSize(1);
+
+        Assertions.assertThat(usersList.get(0).getIdade()).isEqualTo(expectedIdade);
+        Assertions.assertThat(usersList.get(0).getProfissao()).isEqualTo(expectedProfissao);
     }
 
     @Test

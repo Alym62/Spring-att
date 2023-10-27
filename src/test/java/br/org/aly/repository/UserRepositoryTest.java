@@ -78,16 +78,19 @@ class UserRepositoryTest {
         Assertions.assertThat(users).contains(userSaved);
     }
 
-//    @Test
-//    @DisplayName("Teste de criação de usuário! 🧪")
-//    void saveThrows_PersistUser(){
-//        User user = new User();
-//
-//        Assertions.assertThatThrownBy(() -> this.userRepository.save(user))
-//                .isInstanceOf(ConstraintViolationException.class)
-//                .withFailMessage("🚨");
-//
-//    }
+    @Test
+    @DisplayName("Find by idade and profissão (usuario)! 🧪")
+    void findByIdadeAndProfissao_PersistUser(){
+        User user = UserCreator.createUserTest();
+        User userSaved = this.userRepository.save(user);
 
+        Integer idade = userSaved.getIdade();
+        String profissao = userSaved.getProfissao();
+
+        List<User> usersList = this.userRepository.findByIdadeAndProfissao(idade, profissao);
+
+        Assertions.assertThat(usersList).isNotEmpty();
+        Assertions.assertThat(usersList).contains(userSaved);
+    }
 
 }

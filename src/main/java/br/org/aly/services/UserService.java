@@ -4,6 +4,12 @@ import br.org.aly.DTO.UserDTO;
 import br.org.aly.exceptions.BadRequestException;
 import br.org.aly.model.User;
 import br.org.aly.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +23,10 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Page<User> listAll(Pageable pageable) {
+    private final EntityManager entityManager;
+
+    public Page<User> listAll(Pageable pageable){
+
         return userRepository.findAll(pageable);
 
     }
@@ -52,4 +61,5 @@ public class UserService {
 
         userRepository.save(user);
     }
+
 }
