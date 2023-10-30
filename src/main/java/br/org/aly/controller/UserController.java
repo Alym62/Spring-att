@@ -2,6 +2,7 @@ package br.org.aly.controller;
 
 import br.org.aly.DTO.UserDTO;
 import br.org.aly.model.User;
+import br.org.aly.repository.UserCustomRepository;
 import br.org.aly.repository.UserRepository;
 import br.org.aly.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,12 +28,22 @@ public class UserController {
 
     private final UserRepository userRepository;
 
+    private final UserCustomRepository userCustomRepository;
+
     @GetMapping("/find")
     @Operation(summary = "Lista de todos os usuários, baseado na idade e profissão", tags = {"User GET"})
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Foi retornado com sucesso! 🟢"),
             @ApiResponse(responseCode = "400", description = "Não existe um usuário com esses parâmetros. Olhe a documentação! 🔴")})
-    public ResponseEntity<List<User>> controllerFindByIdadeAndProfissao(Integer idade, String profissao){
+    public ResponseEntity<List<User>> controllerFindByIdadeAndProfissao(Integer idade, String profissao) {
         return ResponseEntity.ok(userRepository.findByIdadeAndProfissao(idade, profissao));
+    }
+
+    @GetMapping("/order")
+    @Operation(summary = "Lista os usuários com o mesmo nome.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Foi retornado com sucesso! 🟢"),
+            @ApiResponse(responseCode = "400", description = "Não existe um usuário com esse nome. Olhe a documentação! 🔴")})
+    public List<User> findTestes(@RequestParam("nome") String nome) {
+        return userCustomRepository.consultaCriteria(nome);
     }
 
     @GetMapping("/")
@@ -50,7 +61,6 @@ public class UserController {
     public ResponseEntity<User> findById(@PathVariable long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
-
 
 
     @GetMapping(value = "/categoria")
