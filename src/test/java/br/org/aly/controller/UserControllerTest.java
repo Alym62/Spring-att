@@ -2,6 +2,7 @@ package br.org.aly.controller;
 
 import br.org.aly.DTO.UserDTO;
 import br.org.aly.model.User;
+import br.org.aly.repository.UserCustomRepository;
 import br.org.aly.repository.UserRepository;
 import br.org.aly.services.UserService;
 import br.org.aly.util.UserCreator;
@@ -32,6 +33,9 @@ class UserControllerTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserCustomRepository userCustomRepository;
+
     @BeforeEach
     void setUp() {
         PageImpl<User> userPage = new PageImpl<>(List.of(UserCreator.createUservalid()));
@@ -46,6 +50,9 @@ class UserControllerTest {
                 .thenReturn(List.of(UserCreator.createUservalid()));
 
         BDDMockito.when(userRepository.findByIdadeAndProfissao(ArgumentMatchers.anyInt(), ArgumentMatchers.anyString()))
+                .thenReturn(List.of(UserCreator.createUservalid()));
+
+        BDDMockito.when(userCustomRepository.consultaCriteria(ArgumentMatchers.anyString()))
                 .thenReturn(List.of(UserCreator.createUservalid()));
 
         BDDMockito.when(userServiceMook.saveUser(ArgumentMatchers.any(UserDTO.class)))
@@ -103,7 +110,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Teste de integração para buscar o usuário pela idade e profissão! 🧪")
+    @DisplayName("Teste para buscar o usuário pela idade e profissão! 🧪")
     void findByIdadeAndProfissaoTest(){
         Integer expectedIdade = UserCreator.createUservalid().getIdade();
         String expectedProfissao = UserCreator.createUservalid().getProfissao();
@@ -117,6 +124,21 @@ class UserControllerTest {
 
         Assertions.assertThat(usersList.get(0).getIdade()).isEqualTo(expectedIdade);
         Assertions.assertThat(usersList.get(0).getProfissao()).isEqualTo(expectedProfissao);
+    }
+
+    @Test
+    @DisplayName("Teste para buscar o usuário pelo nome! 🧪")
+    void findByNome() {
+        String expectedNome = UserCreator.createUservalid().getNome();
+
+        List<User> usersList = userController.findOrder("Rodolfo");
+
+        Assertions.assertThat(usersList)
+                .isNotEmpty()
+                .isNotNull()
+                .hasSize(1);
+
+        Assertions.assertThat(usersList.get(0).getNome()).isEqualTo(expectedNome);
     }
 
     @Test

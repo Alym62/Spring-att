@@ -42,7 +42,7 @@ public class UserController {
     @Operation(summary = "Lista os usuários com o mesmo nome.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Foi retornado com sucesso! 🟢"),
             @ApiResponse(responseCode = "400", description = "Não existe um usuário com esse nome. Olhe a documentação! 🔴")})
-    public List<User> findTestes(@RequestParam("nome") String nome) {
+    public List<User> findOrder(@RequestParam("nome") String nome) {
         return userCustomRepository.consultaCriteria(nome);
     }
 

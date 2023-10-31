@@ -4,6 +4,7 @@ import br.org.aly.DTO.UserDTO;
 import br.org.aly.model.AlyUser;
 import br.org.aly.model.User;
 import br.org.aly.repository.DevUserRepository;
+import br.org.aly.repository.UserCustomRepository;
 import br.org.aly.repository.UserRepository;
 import br.org.aly.util.UserCreator;
 import br.org.aly.util.UserDTOCreator;
@@ -45,6 +46,9 @@ public class UserControllerIT {
 
     @Autowired
     private DevUserRepository devUserRepository;
+
+    @Autowired
+    private UserCustomRepository userCustomRepository;
 
     private static final AlyUser userAuth = AlyUser.builder()
             .nome("Aly")
@@ -127,6 +131,31 @@ public class UserControllerIT {
                 .hasSize(1);
 
         Assertions.assertThat(users.get(0).getProfissao()).isEqualTo(expectedProfissao);
+
+    }
+
+    @Test
+    @DisplayName("Teste de integração para buscar o usuário pela profissão! 🧪")
+    void findByNomeTest() {
+        User userSaved = userRepository.save(UserCreator.createUserTest());
+
+        devUserRepository.save(userAuth);
+
+        String expectedNome = UserCreator.createUservalid().getNome();
+
+        String url = String.format("/users/order?nome=%s", expectedNome);
+
+        List<User> users = testRestTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<User>>() {
+                }
+        ).getBody();
+
+        Assertions.assertThat(users)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(users.get(0).getNome()).isEqualTo(expectedNome);
 
     }
 
